@@ -146,15 +146,15 @@ class HypontechSensor(SensorEntity):
             publish_mqtt_state(relevant_data)
             self._state = relevant_data[self._sensor_id]
 
-async def async_setup_entry(hass, entry, async_add_entities):
-    """Set up the sensor platform from a config entry."""
-    coordinator = HypontechDataUpdateCoordinator(hass, entry.data)
+async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
+    """Set up the sensor platform."""
+    coordinator = HypontechDataUpdateCoordinator(hass, config)
     await coordinator.async_config_entry_first_refresh()
 
     sensors = [HypontechSensor(coordinator, sensor_id, config) for sensor_id, config in SENSORS.items()]
     async_add_entities(sensors)
 
-    publish_mqtt_discovery(entry.data)
+    publish_mqtt_discovery(config)
 
 def publish_mqtt_discovery(config):
     """Publish MQTT discovery messages."""
