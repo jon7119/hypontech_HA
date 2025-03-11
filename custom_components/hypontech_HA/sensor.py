@@ -79,6 +79,7 @@ class HypontechDataUpdateCoordinator(DataUpdateCoordinator):
             }
             response = await self.hass.async_add_executor_job(requests.get, "https://api.hypon.cloud/v2/plant/overview", None, headers)
             response.raise_for_status()
+            _LOGGER.debug("Données reçues de l'API: %s", response.json())
             return response.json()
         except requests.HTTPError as http_err:
             _LOGGER.error('Erreur HTTP: %s', str(http_err))

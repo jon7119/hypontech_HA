@@ -36,6 +36,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         """Handle the initial step."""
         if user_input is not None:
             try:
+                _LOGGER.debug("Données d'entrée utilisateur: %s", user_input)
                 # Vous pouvez ajouter ici une validation des données d'entrée
                 return self.async_create_entry(title="Hypontech HA", data=user_input)
             except Exception as e:
@@ -46,6 +47,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     errors={"base": "Erreur lors de la création de l'entrée."}
                 )
 
+        _LOGGER.debug("Affichage du formulaire de configuration.")
         return self.async_show_form(
             step_id="user",
             data_schema=DATA_SCHEMA,
