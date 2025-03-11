@@ -6,13 +6,27 @@ import logging
 import time
 import requests
 import paho.mqtt.client as mqtt
+import voluptuous as vol
 
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.const import (
     CONF_NAME,
     CONF_UNIT_OF_MEASUREMENT,
+    CONF_HOST,
+    CONF_PORT,
+    CONF_USERNAME,
+    CONF_PASSWORD,
 )
+from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.entity import DeviceInfo
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
+
+from .const import (
+    DOMAIN,
+    CONF_HYPONTECH_USERNAME,
+    CONF_HYPONTECH_PASSWORD,
+    CONF_SYSTEM_ID,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -30,17 +44,54 @@ SENSORS = {
     'percent': {'name': 'Percentage', 'unit': '%', 'icon': 'mdi:percent'}
 }
 
-async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
-    """Set up the sensor platform."""
-    sensors = [HypontechSensor(sensor_id, config) for sensor_id, config in SENSORS.items()]
-    async_add_entities(sensors)
-    publish_mqtt_discovery()
+class HypontechDataUpdateCoordinator(DataUpdateCoordinator):
+    """Class to manage fetching Hypontech data."""
+
+    def __init__(self, hass, config):
+        """Initialize global Hypontech data updater."""
+        self.hass = hass
+        self.config = config
+
+        super().__init__(
+            hass,
+            _LOGGER,
+            name=DOMAIN,
+            update_interval=timedelta(minutes=1),
+        )
+
+    async def _async_update_data(self):
+        """Fetch data from Hypontech API."""
+        try:
+            url = "https://api.hypon.cloud/v2/login"
+            data = {
+                "email": self.config[CONF_HYPONTECH_USERNAME],
+                "password": self.config[CONF_HYPONTECH_PASSWORD],
+                "username": self.config[CONF_HYPONTECH_USERNAME],
+            }
+            response = await self.hass.async_add_executor_job(requests.post, url, None, data)
+            if response.status_code == 200:
+                auth_token = response.json()['data']['token']
+                headers = {
+                    "Authorization": f"Bearer {auth_token}"
+                }
+                response = await self.hass.async_add_executor_job(requests.get, "https://api.hypon.cloud/v2/plant/overview", None, headers)
+                if response.status_code == 200:
+                    return response.json()
+                else:
+                    _LOGGER.error('Erreur API: %s', response.status_code)
+            else:
+                _LOGGER.error('Erreur API: %s', response.status_code)
+        except Exception as e:
+            _LOGGER.error('Erreur: %s', str(e))
+
+        return None
 
 class HypontechSensor(SensorEntity):
     """Representation of a Hypontech sensor."""
 
-    def __init__(self, sensor_id, config):
+    def __init__(self, coordinator, sensor_id, config):
         """Initialize the sensor."""
+        self.coordinator = coordinator
         self._sensor_id = sensor_id
         self._name = config['name']
         self._unit_of_measurement = config['unit']
@@ -83,42 +134,33 @@ class HypontechSensor(SensorEntity):
 
     async def async_update(self):
         """Fetch new state data for the sensor."""
-        try:
-            url = "https://api.hypon.cloud/v2/login"
-            data = {
-                "email": "Joncharmant@hotmail.com",
-                "password": "Aqua71150",
-                "username": "Joncharmant@hotmail.com"
+        await self.coordinator.async_request_refresh()
+        data = self.coordinator.data
+        if data:
+            relevant_data = {
+                'e_total': data['data']['e_total'],
+                'e_today': data['data']['e_today'],
+                'power': data['data']['power'],
+                'percent': data['data']['percent']
             }
-            response = await self.hass.async_add_executor_job(requests.post, url, None, data)
-            if response.status_code == 200:
-                auth_token = response.json()['data']['token']
-                headers = {
-                    "Authorization": f"Bearer {auth_token}"
-                }
-                response = await self.hass.async_add_executor_job(requests.get, "https://api.hypon.cloud/v2/plant/overview", None, headers)
-                if response.status_code == 200:
-                    data = response.json()
-                    relevant_data = {
-                        'e_total': data['data']['e_total'],
-                        'e_today': data['data']['e_today'],
-                        'power': data['data']['power'],
-                        'percent': data['data']['percent']
-                    }
-                    publish_mqtt_state(relevant_data)
-                    self._state = relevant_data[self._sensor_id]
-                else:
-                    _LOGGER.error('Erreur API: %s', response.status_code)
-            else:
-                _LOGGER.error('Erreur API: %s', response.status_code)
-        except Exception as e:
-            _LOGGER.error('Erreur: %s', str(e))
+            publish_mqtt_state(relevant_data)
+            self._state = relevant_data[self._sensor_id]
 
-def publish_mqtt_discovery():
+async def async_setup_entry(hass, entry, async_add_entities):
+    """Set up the sensor platform from a config entry."""
+    coordinator = HypontechDataUpdateCoordinator(hass, entry.data)
+    await coordinator.async_config_entry_first_refresh()
+
+    sensors = [HypontechSensor(coordinator, sensor_id, config) for sensor_id, config in SENSORS.items()]
+    async_add_entities(sensors)
+
+    publish_mqtt_discovery(entry.data)
+
+def publish_mqtt_discovery(config):
     """Publish MQTT discovery messages."""
     client = mqtt.Client()
-    client.username_pw_set(MQTT_USERNAME, MQTT_PASSWORD)
-    client.connect(MQTT_BROKER, MQTT_PORT, 60)
+    client.username_pw_set(config[CONF_USERNAME], config[CONF_PASSWORD])
+    client.connect(config[CONF_HOST], config[CONF_PORT], 60)
 
     for sensor_id, config in SENSORS.items():
         topic = f'{MQTT_DISCOVERY_PREFIX}/sensor/{DEVICE_NAME}/{sensor_id}/config'
