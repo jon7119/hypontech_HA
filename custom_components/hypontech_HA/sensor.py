@@ -7,6 +7,7 @@ import time
 import requests
 import paho.mqtt.client as mqtt
 import voluptuous as vol
+from datetime import timedelta
 
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.const import (
@@ -68,19 +69,19 @@ class HypontechDataUpdateCoordinator(DataUpdateCoordinator):
                 "password": self.config[CONF_HYPONTECH_PASSWORD],
                 "username": self.config[CONF_HYPONTECH_USERNAME],
             }
+            _LOGGER.debug("Envoi de la requête de connexion à l'API avec les données: %s", data)
             response = await self.hass.async_add_executor_job(requests.post, url, None, data)
-            if response.status_code == 200:
-                auth_token = response.json()['data']['token']
-                headers = {
-                    "Authorization": f"Bearer {auth_token}"
-                }
-                response = await self.hass.async_add_executor_job(requests.get, "https://api.hypon.cloud/v2/plant/overview", None, headers)
-                if response.status_code == 200:
-                    return response.json()
-                else:
-                    _LOGGER.error('Erreur API: %s', response.status_code)
-            else:
-                _LOGGER.error('Erreur API: %s', response.status_code)
+            response.raise_for_status()
+            auth_token = response.json()['data']['token']
+            _LOGGER.debug("Token d'authentification reçu: %s", auth_token)
+            headers = {
+                "Authorization": f"Bearer {auth_token}"
+            }
+            response = await self.hass.async_add_executor_job(requests.get, "https://api.hypon.cloud/v2/plant/overview", None, headers)
+            response.raise_for_status()
+            return response.json()
+        except requests.HTTPError as http_err:
+            _LOGGER.error('Erreur HTTP: %s', str(http_err))
         except Exception as e:
             _LOGGER.error('Erreur: %s', str(e))
 

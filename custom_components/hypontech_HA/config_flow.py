@@ -11,6 +11,9 @@ from homeassistant.const import (
     CONF_PASSWORD,
 )
 from .const import DOMAIN
+import logging
+
+_LOGGER = logging.getLogger(__name__)
 
 DATA_SCHEMA = vol.Schema(
     {
@@ -32,7 +35,16 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_user(self, user_input=None):
         """Handle the initial step."""
         if user_input is not None:
-            return self.async_create_entry(title="Hypontech HA", data=user_input)
+            try:
+                # Vous pouvez ajouter ici une validation des données d'entrée
+                return self.async_create_entry(title="Hypontech HA", data=user_input)
+            except Exception as e:
+                _LOGGER.error("Erreur lors de la création de l'entrée: %s", str(e))
+                return self.async_show_form(
+                    step_id="user",
+                    data_schema=DATA_SCHEMA,
+                    errors={"base": "Erreur lors de la création de l'entrée."}
+                )
 
         return self.async_show_form(
             step_id="user",
