@@ -1,0 +1,65 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "data": {
+                    "email": "Email",
+                    "password": "Password",
+                    "username": "Username"
+                },
+                "description": "Enter your Hypontech credentials to connect your solar inverter.",
+                "title": "Hypontech Configuration"
+            }
+        },
+        "error": {
+            "cannot_connect": "Unable to connect to Hypontech API",
+            "invalid_auth": "Invalid credentials"
+        },
+        "abort": {
+            "already_configured": "This integration is already configured"
+        }
+    },
+    "entity": {
+        "sensor": {
+            "hypontech_e_total": {
+                "name": "Total Energy"
+            },
+            "hypontech_e_today": {
+                "name": "Today's Energy"
+            },
+            "hypontech_total_co2": {
+                "name": "Total CO2 Avoided"
+            },
+            "hypontech_total_tree": {
+                "name": "Equivalent Trees"
+            },
+            "hypontech_power": {
+                "name": "Current Power"
+            },
+            "hypontech_percent": {
+                "name": "Power Percentage"
+            },
+            "hypontech_normal_dev_num": {
+                "name": "Normal Devices"
+            },
+            "hypontech_offline_dev_num": {
+                "name": "Offline Devices"
+            },
+            "hypontech_fault_dev_num": {
+                "name": "Fault Devices"
+            },
+            "hypontech_wait_dev_num": {
+                "name": "Waiting Devices"
+            },
+            "hypontech_capacity": {
+                "name": "Capacity"
+            },
+            "hypontech_earning_today": {
+                "name": "Today's Earnings"
+            },
+            "hypontech_earning_total": {
+                "name": "Total Earnings"
+            }
+        }
+    }
+} 
