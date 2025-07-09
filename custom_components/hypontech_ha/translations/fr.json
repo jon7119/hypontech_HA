@@ -60,5 +60,14 @@
                 "name": "Gains Totaux"
             }
         }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "scan_interval": "Intervalle de rafraîchissement (secondes)"
+                }
+            }
+        }
     }
 } 

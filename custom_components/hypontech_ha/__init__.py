@@ -35,7 +35,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Récupération des données de configuration
     username = entry.data[CONF_USERNAME]
     password = entry.data[CONF_PASSWORD]
-    scan_interval = entry.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
+    scan_interval = entry.options.get("scan_interval", entry.data.get("scan_interval", 60))
+    if isinstance(scan_interval, int):
+        scan_interval = timedelta(seconds=scan_interval)
 
     # Création de l'API client
     api = HypontechAPI(username, password)
