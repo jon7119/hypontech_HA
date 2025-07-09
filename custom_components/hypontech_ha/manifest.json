@@ -1,5 +1,5 @@
 {
-    "domain": "hypontech",
+    "domain": "hypontech_ha",
     "name": "Hypontech Solar",
     "documentation": "https://github.com/jon7119/hypontech_HA",
     "dependencies": [],
