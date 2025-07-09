@@ -1,7 +1,7 @@
 """Constantes pour l'intégration Hypontech."""
 from datetime import timedelta
 
-DOMAIN = "hypontech"
+DOMAIN = "hypontech_ha"
 
 # Configuration
 CONF_USERNAME = "username"
