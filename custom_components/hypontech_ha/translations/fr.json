@@ -1,0 +1,64 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "data": {
+                    "username": "Nom d'utilisateur",
+                    "password": "Mot de passe"
+                },
+                "description": "Entrez vos identifiants Hypontech pour connecter votre onduleur solaire.",
+                "title": "Configuration Hypontech"
+            }
+        },
+        "error": {
+            "cannot_connect": "Impossible de se connecter à l'API Hypontech",
+            "invalid_auth": "Identifiants invalides"
+        },
+        "abort": {
+            "already_configured": "Cette intégration est déjà configurée"
+        }
+    },
+    "entity": {
+        "sensor": {
+            "hypontech_e_total": {
+                "name": "Énergie Totale"
+            },
+            "hypontech_e_today": {
+                "name": "Énergie Aujourd'hui"
+            },
+            "hypontech_total_co2": {
+                "name": "CO2 Évité Total"
+            },
+            "hypontech_total_tree": {
+                "name": "Arbres Équivalents"
+            },
+            "hypontech_power": {
+                "name": "Puissance Actuelle"
+            },
+            "hypontech_percent": {
+                "name": "Pourcentage de Puissance"
+            },
+            "hypontech_normal_dev_num": {
+                "name": "Appareils Normaux"
+            },
+            "hypontech_offline_dev_num": {
+                "name": "Appareils Hors Ligne"
+            },
+            "hypontech_fault_dev_num": {
+                "name": "Appareils en Erreur"
+            },
+            "hypontech_wait_dev_num": {
+                "name": "Appareils en Attente"
+            },
+            "hypontech_capacity": {
+                "name": "Capacité"
+            },
+            "hypontech_earning_today": {
+                "name": "Gains Aujourd'hui"
+            },
+            "hypontech_earning_total": {
+                "name": "Gains Totaux"
+            }
+        }
+    }
+} 
