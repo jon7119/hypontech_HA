@@ -4,4 +4,5 @@
   "domains": ["hypontech_ha"],
   "homeassistant": "2023.8.0",
   "iot_class": "Cloud Polling"
+  "filename": "hypontech_ha"
 } 
