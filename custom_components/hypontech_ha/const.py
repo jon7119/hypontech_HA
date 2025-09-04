@@ -50,13 +50,6 @@ SENSOR_TYPES = {
         "device_class": "power",
         "state_class": "measurement",
     },
-    "percent": {
-        "name": "Pourcentage de Puissance",
-        "unit": "%",
-        "icon": "mdi:percent",
-        "device_class": None,
-        "state_class": "measurement",
-    },
     "normal_dev_num": {
         "name": "Appareils Normaux",
         "unit": None,

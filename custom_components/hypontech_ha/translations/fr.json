@@ -35,9 +35,6 @@
             "hypontech_power": {
                 "name": "Puissance Actuelle"
             },
-            "hypontech_percent": {
-                "name": "Pourcentage de Puissance"
-            },
             "hypontech_normal_dev_num": {
                 "name": "Appareils Normaux"
             },
@@ -53,11 +50,35 @@
             "hypontech_capacity": {
                 "name": "Capacité"
             },
-            "hypontech_earning_today": {
-                "name": "Gains Aujourd'hui"
+            "hypontech_today_generation": {
+                "name": "Génération Aujourd'hui"
             },
-            "hypontech_earning_total": {
-                "name": "Gains Totaux"
+            "hypontech_month_generation": {
+                "name": "Génération du Mois"
+            },
+            "hypontech_year_generation": {
+                "name": "Génération de l'Année"
+            },
+            "hypontech_total_generation": {
+                "name": "Génération Totale"
+            },
+            "hypontech_co2_saved": {
+                "name": "CO2 Évité"
+            },
+            "hypontech_tree_equivalent": {
+                "name": "Équivalent Arbres"
+            },
+            "hypontech_diesel_saved": {
+                "name": "Diesel Économisé"
+            },
+            "hypontech_today_revenue": {
+                "name": "Revenus Aujourd'hui"
+            },
+            "hypontech_month_revenue": {
+                "name": "Revenus du Mois"
+            },
+            "hypontech_total_revenue": {
+                "name": "Revenus Totaux"
             }
         }
     },

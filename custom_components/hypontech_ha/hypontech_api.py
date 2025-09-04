@@ -136,7 +136,6 @@ class HypontechAPI:
                 'total_co2': overview_data.get('total_co2', 0),
                 'total_tree': overview_data.get('total_tree', 0),
                 'power': overview_data.get('power', 0),
-                'percent': overview_data.get('percent', 0),
                 'normal_dev_num': overview_data.get('normal_dev_num', 0),
                 'offline_dev_num': overview_data.get('offline_dev_num', 0),
                 'fault_dev_num': overview_data.get('fault_dev_num', 0),
