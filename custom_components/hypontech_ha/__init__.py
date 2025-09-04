@@ -18,6 +18,7 @@ from .const import (
     DOMAIN,
     DEFAULT_SCAN_INTERVAL,
     CONF_USERNAME,
+    CONF_PLANT_ID,
 )
 from .hypontech_api import HypontechAPI
 
@@ -35,12 +36,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Récupération des données de configuration
     username = entry.data[CONF_USERNAME]
     password = entry.data[CONF_PASSWORD]
+    plant_id = entry.data[CONF_PLANT_ID]
     scan_interval = entry.options.get("scan_interval", entry.data.get("scan_interval", 60))
     if isinstance(scan_interval, int):
         scan_interval = timedelta(seconds=scan_interval)
 
     # Création de l'API client
-    api = HypontechAPI(username, password)
+    api = HypontechAPI(username, password, plant_id)
 
     # Création du coordinateur de données
     coordinator = DataUpdateCoordinator(

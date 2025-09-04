@@ -5,13 +5,13 @@ DOMAIN = "hypontech_ha"
 
 # Configuration
 CONF_USERNAME = "username"
+CONF_PLANT_ID = "plant_id"
 DEFAULT_SCAN_INTERVAL = timedelta(minutes=1)
 
 # API
 API_BASE_URL = "https://api.hypon.cloud/v2"
 API_LOGIN_URL = f"{API_BASE_URL}/login"
 API_OVERVIEW_URL = f"{API_BASE_URL}/plant/overview"
-API_PRODUCTION2_URL = f"{API_BASE_URL}/plant/1332746207645638656/production2"
 
 # Capteurs
 SENSOR_TYPES = {

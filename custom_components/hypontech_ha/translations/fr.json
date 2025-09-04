@@ -4,10 +4,20 @@
             "user": {
                 "data": {
                     "username": "Nom d'utilisateur",
-                    "password": "Mot de passe"
+                    "password": "Mot de passe",
+                    "plant_id": "ID de l'installation"
                 },
                 "description": "Entrez vos identifiants Hypontech pour connecter votre onduleur solaire.",
                 "title": "Configuration Hypontech"
+            },
+            "reauth": {
+                "data": {
+                    "username": "Nom d'utilisateur",
+                    "password": "Mot de passe",
+                    "plant_id": "ID de l'installation"
+                },
+                "description": "Reconfigurez vos identifiants Hypontech.",
+                "title": "Reconfiguration Hypontech"
             }
         },
         "error": {
@@ -15,7 +25,8 @@
             "invalid_auth": "Identifiants invalides"
         },
         "abort": {
-            "already_configured": "Cette intégration est déjà configurée"
+            "already_configured": "Cette intégration est déjà configurée",
+            "reauth_successful": "Reconfiguration réussie"
         }
     },
     "entity": {

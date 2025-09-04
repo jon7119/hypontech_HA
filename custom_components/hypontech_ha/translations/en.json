@@ -4,10 +4,20 @@
             "user": {
                 "data": {
                     "username": "Username",
-                    "password": "Password"
+                    "password": "Password",
+                    "plant_id": "Plant ID"
                 },
                 "description": "Enter your Hypontech credentials to connect your solar inverter.",
                 "title": "Hypontech Configuration"
+            },
+            "reauth": {
+                "data": {
+                    "username": "Username",
+                    "password": "Password",
+                    "plant_id": "Plant ID"
+                },
+                "description": "Reconfigure your Hypontech credentials.",
+                "title": "Hypontech Reconfiguration"
             }
         },
         "error": {
@@ -15,7 +25,8 @@
             "invalid_auth": "Invalid credentials"
         },
         "abort": {
-            "already_configured": "This integration is already configured"
+            "already_configured": "This integration is already configured",
+            "reauth_successful": "Reconfiguration successful"
         }
     },
     "entity": {

@@ -6,7 +6,7 @@ from typing import Any, Dict
 import aiohttp
 import async_timeout
 
-from .const import API_LOGIN_URL, API_OVERVIEW_URL, API_PRODUCTION2_URL
+from .const import API_LOGIN_URL, API_OVERVIEW_URL, API_BASE_URL
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -14,10 +14,11 @@ _LOGGER = logging.getLogger(__name__)
 class HypontechAPI:
     """Client API pour Hypontech."""
 
-    def __init__(self, username: str, password: str):
+    def __init__(self, username: str, password: str, plant_id: str):
         """Initialisation du client API."""
         self._username = username
         self._password = password
+        self._plant_id = plant_id
         self._auth_token = None
         self._session = None
 
@@ -95,10 +96,13 @@ class HypontechAPI:
 
         session = await self._get_session()
         headers = {"Authorization": f"Bearer {self._auth_token}"}
+        
+        # Construction de l'URL avec le plant_id dynamique
+        production2_url = f"{API_BASE_URL}/plant/{self._plant_id}/production2"
 
         try:
             async with async_timeout.timeout(10):
-                async with session.get(API_PRODUCTION2_URL, headers=headers) as response:
+                async with session.get(production2_url, headers=headers) as response:
                     if response.status == 200:
                         data = await response.json()
                         return data['data']

@@ -1,0 +1,105 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "data": {
+                    "username": "Benutzername",
+                    "password": "Passwort",
+                    "plant_id": "Anlagen-ID"
+                },
+                "description": "Geben Sie Ihre Hypontech-Anmeldedaten ein, um Ihren Solar-Wechselrichter zu verbinden.",
+                "title": "Hypontech-Konfiguration"
+            },
+            "reauth": {
+                "data": {
+                    "username": "Benutzername",
+                    "password": "Passwort",
+                    "plant_id": "Anlagen-ID"
+                },
+                "description": "Konfigurieren Sie Ihre Hypontech-Anmeldedaten neu.",
+                "title": "Hypontech-Neukonfiguration"
+            }
+        },
+        "error": {
+            "cannot_connect": "Verbindung zur Hypontech-API nicht möglich",
+            "invalid_auth": "Ungültige Anmeldedaten"
+        },
+        "abort": {
+            "already_configured": "Diese Integration ist bereits konfiguriert",
+            "reauth_successful": "Neukonfiguration erfolgreich"
+        }
+    },
+    "entity": {
+        "sensor": {
+            "hypontech_e_total": {
+                "name": "Gesamtenergie"
+            },
+            "hypontech_e_today": {
+                "name": "Energie heute"
+            },
+            "hypontech_total_co2": {
+                "name": "Gesamtes CO2 vermieden"
+            },
+            "hypontech_total_tree": {
+                "name": "Äquivalente Bäume"
+            },
+            "hypontech_power": {
+                "name": "Aktuelle Leistung"
+            },
+            "hypontech_normal_dev_num": {
+                "name": "Normale Geräte"
+            },
+            "hypontech_offline_dev_num": {
+                "name": "Offline-Geräte"
+            },
+            "hypontech_fault_dev_num": {
+                "name": "Fehlerhafte Geräte"
+            },
+            "hypontech_wait_dev_num": {
+                "name": "Wartende Geräte"
+            },
+            "hypontech_capacity": {
+                "name": "Kapazität"
+            },
+            "hypontech_today_generation": {
+                "name": "Erzeugung heute"
+            },
+            "hypontech_month_generation": {
+                "name": "Erzeugung des Monats"
+            },
+            "hypontech_year_generation": {
+                "name": "Erzeugung des Jahres"
+            },
+            "hypontech_total_generation": {
+                "name": "Gesamterzeugung"
+            },
+            "hypontech_co2_saved": {
+                "name": "CO2 gespart"
+            },
+            "hypontech_tree_equivalent": {
+                "name": "Baumäquivalent"
+            },
+            "hypontech_diesel_saved": {
+                "name": "Diesel gespart"
+            },
+            "hypontech_today_revenue": {
+                "name": "Einnahmen heute"
+            },
+            "hypontech_month_revenue": {
+                "name": "Einnahmen des Monats"
+            },
+            "hypontech_total_revenue": {
+                "name": "Gesamteinnahmen"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "scan_interval": "Aktualisierungsintervall (Sekunden)"
+                }
+            }
+        }
+    }
+}
