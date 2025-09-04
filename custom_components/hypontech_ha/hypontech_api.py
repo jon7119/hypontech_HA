@@ -6,7 +6,7 @@ from typing import Any, Dict
 import aiohttp
 import async_timeout
 
-from .const import API_LOGIN_URL, API_OVERVIEW_URL
+from .const import API_LOGIN_URL, API_OVERVIEW_URL, API_PRODUCTION2_URL
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -87,27 +87,76 @@ class HypontechAPI:
             _LOGGER.error(f"Erreur lors de la récupération des données: {e}")
             raise
 
+    async def _get_production2_data(self) -> Dict[str, Any]:
+        """Récupère les données de production détaillées de l'installation."""
+        if not self._auth_token:
+            if not await self._login():
+                raise Exception("Impossible de s'authentifier")
+
+        session = await self._get_session()
+        headers = {"Authorization": f"Bearer {self._auth_token}"}
+
+        try:
+            async with async_timeout.timeout(10):
+                async with session.get(API_PRODUCTION2_URL, headers=headers) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        return data['data']
+                    elif response.status == 401:
+                        # Token expiré, nouvelle authentification
+                        _LOGGER.debug("Token expiré, nouvelle authentification")
+                        self._auth_token = None
+                        if await self._login():
+                            return await self._get_production2_data()
+                        else:
+                            raise Exception("Impossible de se réauthentifier")
+                    else:
+                        _LOGGER.error(f"Erreur API production2: {response.status}")
+                        raise Exception(f"Erreur API production2: {response.status}")
+        except asyncio.TimeoutError:
+            _LOGGER.error("Timeout lors de la récupération des données de production")
+            raise Exception("Timeout lors de la récupération des données de production")
+        except Exception as e:
+            _LOGGER.error(f"Erreur lors de la récupération des données de production: {e}")
+            raise
+
     async def async_get_data(self) -> Dict[str, Any]:
         """Récupère toutes les données de l'installation."""
         try:
-            data = await self._get_overview_data()
+            # Récupération des données d'aperçu
+            overview_data = await self._get_overview_data()
             
-            # Extraction des données pertinentes
+            # Récupération des données de production détaillées
+            production_data = await self._get_production2_data()
+            
+            # Extraction des données pertinentes de l'aperçu
             relevant_data = {
-                'e_total': data.get('e_total', 0),
-                'e_today': data.get('e_today', 0),
-                'total_co2': data.get('total_co2', 0),
-                'total_tree': data.get('total_tree', 0),
-                'power': data.get('power', 0),
-                'percent': data.get('percent', 0),
-                'normal_dev_num': data.get('normal_dev_num', 0),
-                'offline_dev_num': data.get('offline_dev_num', 0),
-                'fault_dev_num': data.get('fault_dev_num', 0),
-                'wait_dev_num': data.get('wait_dev_num', 0),
-                'capacity': data.get('capacity', 0),
-                'earning_today': data.get('earning', [{}])[0].get('today', 0) if data.get('earning') else 0,
-                'earning_total': data.get('earning', [{}])[0].get('total', 0) if data.get('earning') else 0,
+                'e_total': overview_data.get('e_total', 0),
+                'e_today': overview_data.get('e_today', 0),
+                'total_co2': overview_data.get('total_co2', 0),
+                'total_tree': overview_data.get('total_tree', 0),
+                'power': overview_data.get('power', 0),
+                'percent': overview_data.get('percent', 0),
+                'normal_dev_num': overview_data.get('normal_dev_num', 0),
+                'offline_dev_num': overview_data.get('offline_dev_num', 0),
+                'fault_dev_num': overview_data.get('fault_dev_num', 0),
+                'wait_dev_num': overview_data.get('wait_dev_num', 0),
+                'capacity': overview_data.get('capacity', 0),
             }
+            
+            # Ajout des données de production détaillées
+            relevant_data.update({
+                'today_generation': production_data.get('today_generation', 0),
+                'month_generation': production_data.get('month_generation', 0),
+                'year_generation': production_data.get('year_generation', 0),
+                'total_generation': production_data.get('total_generation', 0),
+                'co2_saved': production_data.get('co2', 0),
+                'tree_equivalent': production_data.get('tree', 0),
+                'diesel_saved': production_data.get('diesel', 0),
+                'today_revenue': production_data.get('today_revenue', 0),
+                'month_revenue': production_data.get('month_revenue', 0),
+                'total_revenue': production_data.get('total_revenue', 0),
+            })
             
             _LOGGER.debug(f"Données récupérées: {relevant_data}")
             return relevant_data
