@@ -30,7 +30,7 @@ Cette intégration permet de connecter votre onduleur solaire Hypontech à Home 
    - Allez dans **Paramètres > Appareils & Services > Ajouter une intégration**
    - Recherchez **Hypontech Solar**
    - Entrez vos identifiants Hypontech Cloud
-   - entrez votre plantid genre "https://www.hypon.cloud/plant/1532746207645638656/detail"
+   - entrez votre plantid genre "https://www.hypon.cloud/plant/2532746207645638656/detail" ou "(ID Système 2532746207645638656)"
    - Validez
 
 ---
@@ -50,3 +50,4 @@ Cette intégration permet de connecter votre onduleur solaire Hypontech à Home 
 
 
 **Développé par jon7119.** 
+
