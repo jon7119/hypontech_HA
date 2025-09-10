@@ -45,7 +45,7 @@ SENSOR_TYPES = {
     },
     "power": {
         "name": "Puissance Actuelle",
-        "unit": "W",
+        "unit": "kW",
         "icon": "mdi:flash",
         "device_class": "power",
         "state_class": "measurement",

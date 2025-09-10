@@ -44,7 +44,7 @@
                 "name": "Arbres Équivalents"
             },
             "hypontech_power": {
-                "name": "Puissance Actuelle"
+                "name": "Puissance Actuelle (kW)"
             },
             "hypontech_normal_dev_num": {
                 "name": "Appareils Normaux"
