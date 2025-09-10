@@ -44,7 +44,7 @@
                 "name": "Equivalent Trees"
             },
             "hypontech_power": {
-                "name": "Current Power"
+                "name": "Current Power (kW)"
             },
             "hypontech_normal_dev_num": {
                 "name": "Normal Devices"

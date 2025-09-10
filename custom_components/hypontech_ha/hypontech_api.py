@@ -134,12 +134,17 @@ class HypontechAPI:
             production_data = await self._get_production2_data()
             
             # Extraction des données pertinentes de l'aperçu
+            raw_power = overview_data.get('power', 0)
+            
+            # Correction automatique de la puissance : détection kW vs W
+            corrected_power = self._correct_power_value(raw_power)
+            
             relevant_data = {
                 'e_total': overview_data.get('e_total', 0),
                 'e_today': overview_data.get('e_today', 0),
                 'total_co2': overview_data.get('total_co2', 0),
                 'total_tree': overview_data.get('total_tree', 0),
-                'power': overview_data.get('power', 0),
+                'power': corrected_power,
                 'normal_dev_num': overview_data.get('normal_dev_num', 0),
                 'offline_dev_num': overview_data.get('offline_dev_num', 0),
                 'fault_dev_num': overview_data.get('fault_dev_num', 0),
@@ -167,6 +172,44 @@ class HypontechAPI:
         except Exception as e:
             _LOGGER.error(f"Erreur lors de la récupération des données: {e}")
             raise
+
+    def _correct_power_value(self, raw_power: float) -> float:
+        """
+        Normalise la valeur de puissance pour un affichage cohérent.
+        
+        L'API Hypontech retourne parfois la puissance en kW au lieu de W
+        quand elle dépasse 1000W. Cette méthode garde les kW en kW et les W en W.
+        
+        Args:
+            raw_power: Valeur brute de puissance de l'API
+            
+        Returns:
+            Puissance normalisée (kW si < 10, W si >= 1000)
+        """
+        if raw_power is None or raw_power == 0:
+            return 0
+        
+        # Détection des valeurs en kW (généralement < 10)
+        # Exemples: 1.2kW reste 1.2kW, 2.5kW reste 2.5kW
+        if raw_power < 10 and raw_power > 0:
+            # Probablement en kW, on garde en kW
+            _LOGGER.debug(f"Puissance détectée en kW: {raw_power}kW")
+            return raw_power
+        elif raw_power >= 10 and raw_power < 1000:
+            # Valeur intermédiaire, vérification si c'est décimal (probablement kW)
+            if raw_power != int(raw_power):
+                # Valeur décimale entre 10-1000, probablement en kW
+                _LOGGER.debug(f"Puissance décimale détectée en kW: {raw_power}kW")
+                return raw_power
+        
+        # Valeur >= 1000, probablement en W, conversion en kW pour l'affichage
+        if raw_power >= 1000:
+            converted = raw_power / 1000
+            _LOGGER.debug(f"Conversion W vers kW: {raw_power}W -> {converted}kW")
+            return converted
+        
+        # Valeur entre 10-1000 entière, probablement en W
+        return raw_power
 
     async def close(self):
         """Ferme la session HTTP."""

@@ -44,7 +44,7 @@
                 "name": "Äquivalente Bäume"
             },
             "hypontech_power": {
-                "name": "Aktuelle Leistung"
+                "name": "Aktuelle Leistung (kW)"
             },
             "hypontech_normal_dev_num": {
                 "name": "Normale Geräte"
