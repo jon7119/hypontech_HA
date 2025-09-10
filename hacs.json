@@ -2,7 +2,8 @@
   "name": "Hypontech Solar",
   "render_readme": true,
   "domains": ["hypontech_ha"],
-  "homeassistant": "2023.8.0",
+  "homeassistant": "2025.9.1",
   "iot_class": "Cloud Polling"
   "filename": "hypontech_ha"
 } 
+
